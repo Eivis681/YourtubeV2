@@ -1,0 +1,111 @@
+﻿<Window x:Class="YourtubeV2.DetailsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:YourtubeV2"
+        mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="#8CCAB5"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        Height="300"
+        Width="800"
+        Title="DetailsWindow"
+        WindowStartupLocation="CenterScreen">
+    <materialDesign:DrawerHost x:Name="DrawerHost"
+                               BorderBrush="{DynamicResource MaterialDesignDivider}">
+        <materialDesign:DrawerHost.Style>
+            <Style TargetType="materialDesign:DrawerHost"
+                   BasedOn="{StaticResource {x:Type materialDesign:DrawerHost}}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsChecked, ElementName=BackgroundToggle}"
+                                 Value="True">
+                        <Setter Property="OverlayBackground"
+                                Value="{DynamicResource PrimaryHueMidBrush}" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </materialDesign:DrawerHost.Style>
+        <materialDesign:DrawerHost.LeftDrawerContent>
+            <StackPanel Margin="16">
+                <TextBlock Margin="4"
+                           HorizontalAlignment="Center"
+                           Text="Yourtube" />
+                <Button Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"
+                        Margin="4"
+                        HorizontalAlignment="Center"
+                        Style="{DynamicResource MaterialDesignFlatButton}"
+                        Content="MP3"
+                        Name="Mp3Button"
+                        Click="Mp3Button_Click"/>
+                <Button Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"
+                        Margin="4"
+                        HorizontalAlignment="Center"
+                        Style="{DynamicResource MaterialDesignFlatButton}"
+                        Content="MP4"
+                        Name="Mp4Button"
+                         Click="Mp4Button_Click"/>
+                <Button Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"
+                        Margin="4"
+                        HorizontalAlignment="Center"
+                        Style="{DynamicResource MaterialDesignFlatButton}"
+                        Content="PLAYLISTS"
+                        Name="PlaylistButton"
+                        Click="PlaylistButton_Click" />
+                <Button Command="{x:Static materialDesign:DrawerHost.CloseDrawerCommand}"
+                        Margin="4"
+                        HorizontalAlignment="Center"
+                        Style="{DynamicResource MaterialDesignFlatButton}"
+                        Content="OPTIONS"
+                        FontWeight="Bold"
+                        FontStyle="Oblique"
+                         />
+            </StackPanel>
+        </materialDesign:DrawerHost.LeftDrawerContent>
+
+        <StackPanel>
+            <materialDesign:ColorZone Mode="PrimaryDark"
+                                      Padding="5">
+                <StackPanel Orientation="Horizontal">
+                    <ToggleButton Style="{DynamicResource MaterialDesignHamburgerToggleButton}"
+                                  Command="{x:Static materialDesign:DrawerHost.OpenDrawerCommand}" />
+                    <TextBlock VerticalAlignment="Center"
+                               Margin="16 0 0 0"
+                               Text="Options" />
+                </StackPanel>
+            </materialDesign:ColorZone>
+            <StackPanel>
+                <DockPanel >
+                <TextBlock VerticalAlignment="Center"
+                           Margin="16 10 0 0"
+                           Text="Api Key: "
+                           FontSize="15"
+                           />
+                    <TextBox materialDesign:HintAssist.Hint="Api Key"
+                             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                             Margin="10,0,10,0"
+                             IsReadOnly="True"
+                             Name="ApiKeyTextBox"
+                             
+                              />
+                </DockPanel>
+                
+                <Button Style="{StaticResource MaterialDesignRaisedButton}"
+                        Width="150"
+                        ToolTip="Resource name: MaterialDesignRaisedButton"
+                        Content="Edit Key"
+                        Name="EditBut"
+                        Click="EditBut_Click"
+                        Margin="0, 10"
+                         />
+                    
+                
+            </StackPanel>
+        </StackPanel>
+    </materialDesign:DrawerHost>
+</Window>

@@ -204,6 +204,7 @@ namespace YourtubeV2.View
             if(string.IsNullOrEmpty(UrlTextBox.Text))
             {
                 MessageBox.Show("Please fill in the box");
+                return;
             }
             if (array[0] != "https://www.youtube.com/watch" && array[0] != "https://www.youtube.com/playlist")
             {

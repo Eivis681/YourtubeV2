@@ -160,10 +160,7 @@ namespace YourtubeV2.Service
             foreach (var song in songList)
             {
                 SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
-                sqlite_cmd.CommandText = "UPDATE Songs Set Downloaded = ?  Where PlaylistId = ? AND SongId = ?";
-                sqlite_cmd.Parameters.AddWithValue("SongId", song.VideoId);
-                sqlite_cmd.Parameters.AddWithValue("PlaylistId", UserGetSet.SelectedPlaylistId);
-                sqlite_cmd.Parameters.AddWithValue("Downloaded", "Yes");
+                sqlite_cmd.CommandText = $"UPDATE Songs Set Downloaded = 'Yes'  Where PlaylistId = '{UserGetSet.SelectedPlaylistId}' AND SongId = '{song.VideoId}'";
                 sqlite_cmd.ExecuteNonQuery();
             }
             sqlite_conn.Close();

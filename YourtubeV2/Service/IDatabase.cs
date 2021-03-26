@@ -15,7 +15,7 @@ namespace YourtubeV2.Service
         void DeletePlaylist(int playlistId);
         void DeleteSongs(List<JsonList> deleteSongs);
         void RenamePlaylist(string newPlaylistName);
-         void AddSong(string songId, string url);
+        void AddSong(string songId, string url);
         void AddSongs(List<JsonList> songList, string playlistId);
         void UpdateDownloadStatus(List<JsonList> songList);
 

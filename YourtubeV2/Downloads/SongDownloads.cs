@@ -30,11 +30,11 @@ namespace YourtubeV2.Downloads
                 if (streamInfo != null)
                 {
                     await youtube.Videos.Streams.GetAsync(streamInfo);
-                    await youtube.Videos.Streams.DownloadAsync(streamInfo, vid.Title + ".mp3");
+                    await youtube.Videos.Streams.DownloadAsync(streamInfo, $"{directory}\\{vid.Title} + .mp3");
                 }
-                string data = Directory.GetCurrentDirectory() + "\\";
+                //string data = Directory.GetCurrentDirectory() + "\\";
 
-                File.Move(data + vid.Title + ".mp3", directory + "\\" + vid.Title + ".mp3");
+                //File.Move(data + vid.Title + ".mp3", directory + "\\" + vid.Title + ".mp3");
 
                 counter++;
                 progressBarSong.Invoke(counter);

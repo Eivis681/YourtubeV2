@@ -31,14 +31,8 @@ namespace YourtubeV2.View
             PlaylistNameLabel.Text = $"Playlist {UserGetSet.SelectedPlaylistName} ";
             UpdateInterface();
             SongGrid.ItemsSource = Item;
-
         }
-        private void BackButton_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            this.Hide();
-            PlaylistWindow playlist = new PlaylistWindow();
-            playlist.Show();
-        }
+        
         private void UpdateInterface()
         {
             Item = _database.GetSongs(UserGetSet.SelectedPlaylistId);
@@ -102,6 +96,7 @@ namespace YourtubeV2.View
             if (deleteList.Count == 0)
             {
                 MessageBox.Show("Please select songs");
+                return;
             }
             var result = MessageBox.Show("Are you sure you want to delete these songs ?", "Delete", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes)
@@ -126,7 +121,27 @@ namespace YourtubeV2.View
 
         private void UpdatePlaylist_Click(object sender, RoutedEventArgs e)
         {
-
+            List<string> playlistId = _database.GetPlaylistId();
+            GetSongIdTitle getSongIdTitle = new GetSongIdTitle();
+            List<JsonList> apiSongs = new List<JsonList>();
+            for (int i = 0; i<playlistId.Count; i++)
+            {
+                string url = $"https://www.youtube.com/playlist?list={playlistId[i]}";
+                List<JsonList> playlistSongsIds = getSongIdTitle.SongId(url);
+                apiSongs = apiSongs.Concat(playlistSongsIds).ToList();
+            }
+            var newSongList = apiSongs.Where(x => !Item.Any(z => x.VideoId == z.SongId)).ToList();
+            if(newSongList.Count > 0)
+            {
+                _database.AddSongs(newSongList, null, false);
+                MessageBox.Show($"{newSongList.Count} songs have been added");
+                UpdateInterface();
+                SongGrid.ItemsSource = Item;
+            }
+            else
+            {
+                MessageBox.Show("All playlists are up to date");
+            }
         }
 
         private void RenamePlaylist_Click(object sender, RoutedEventArgs e)
@@ -153,6 +168,15 @@ namespace YourtubeV2.View
             if (e.Column.Header.ToString() == "PlaylistId")
             {
                 e.Cancel = true;
+            }
+            if (e.Column.Header.ToString() == "SongName")
+            {
+                e.Column.Header = "Song name";
+                e.Column.IsReadOnly = true;
+            }
+            if (e.Column.Header.ToString() == "Downloaded")
+            {
+                e.Column.IsReadOnly = true;
             }
         }
         public void SongProgressBar(int number)
@@ -198,7 +222,7 @@ namespace YourtubeV2.View
             Directory.Text = dialog.FileName;
         }
 
-        private void SaveNewSongs_Click(object sender, RoutedEventArgs e)
+        private async void SaveNewSongs_Click(object sender, RoutedEventArgs e)
         {
             var array = UrlTextBox.Text.Split('?');
             if(string.IsNullOrEmpty(UrlTextBox.Text))
@@ -214,20 +238,24 @@ namespace YourtubeV2.View
             if(array[0] == "https://www.youtube.com/watch")
             {
                 var songIds = UrlTextBox.Text.Split('=');
-                _database.AddSong(songIds[1], UrlTextBox.Text);
+                var youtube = new YoutubeClient();
+                var vid = await youtube.Videos.GetAsync(UrlTextBox.Text);
+                _database.AddSong(songIds[1], vid.Title);
                 MessageBox.Show("Song has been added");
                 UpdateInterface();
                 SongGrid.ItemsSource = Item;
+                UrlTextBox.Text = "";
             }
             if(array[0] == "https://www.youtube.com/playlist")
             {
                 GetSongIdTitle getSong = new GetSongIdTitle();
                 List<JsonList> songs = getSong.SongId(UrlTextBox.Text);
                 var  playlistId = UrlTextBox.Text.Split('=');
-                _database.AddSongs(songs, playlistId[1]);
+                _database.AddSongs(songs, playlistId[1], true);
                 MessageBox.Show("Songs have been added");
                 UpdateInterface();
                 SongGrid.ItemsSource = Item;
+                UrlTextBox.Text = "";
             }
             AddSongsWindow.Visibility = Visibility.Hidden;
         }
@@ -244,6 +272,20 @@ namespace YourtubeV2.View
                 PlaylistNameLabel.Text = $"Playlist {PlaylistName.Text}";
                 RenamePlaylists.Visibility = Visibility.Hidden;
             }
+        }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Hide();
+            PlaylistWindow playlist = new PlaylistWindow();
+            playlist.Show();
+        }
+
+        private void ListViewScrollViewer_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+            ScrollViewer scv = (ScrollViewer)sender;
+            scv.ScrollToVerticalOffset(scv.VerticalOffset - e.Delta);
+            e.Handled = true;
         }
     }
 }

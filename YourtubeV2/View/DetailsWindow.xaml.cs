@@ -50,6 +50,7 @@ namespace YourtubeV2
 
         private void EditBut_Click(object sender, RoutedEventArgs e)
         {
+            UserGetSet.input();
             if(EditBut.Content.ToString() == "Edit Key")
             {
                 ApiKeyTextBox.IsReadOnly = false;
@@ -59,6 +60,11 @@ namespace YourtubeV2
             {
                 try
                 {
+                    if(UserGetSet.ApiKey == ApiKeyTextBox.Text)
+                    {
+                        MessageBox.Show("Api keys are the same");
+                        return;
+                    }
                     string url = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=PLYQ21GguN2ssJfHlwxZxzepHaiu3t798Y&key=" + ApiKeyTextBox.Text;
                     WebClient wc = new WebClient();
                     string urlData = wc.DownloadString(url);

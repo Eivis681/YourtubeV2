@@ -35,13 +35,12 @@
             <materialDesign:ColorZone Mode="PrimaryDark"
                                       Padding="10">
                 <DockPanel >
-                    <materialDesign:PackIcon Kind="ArrowLeft"
-                                             Height="25"
-                                             Width="25"
-                                             Name="BackButton"
-                                             PreviewMouseDoubleClick="BackButton_MouseDoubleClick"
-                                             VerticalAlignment="Center"/>
-                                   
+                    <Button Content="{materialDesign:PackIcon Kind=ArrowLeft}"
+                            Width="50"
+                            FontSize="15px"
+                            Name="BackButton"
+                            Click="BackButton_Click"
+                             />     
                     <TextBlock VerticalAlignment="Center"
                                Margin="16 0 0 0"
                                Text="MP3 Download"
@@ -54,6 +53,7 @@
                             Name="deletePlaylist"
                             Click="deletePlaylist_Click"
                              />
+                    
                 </DockPanel>
                 
 
@@ -77,9 +77,10 @@
                 <ScrollViewer Grid.Column="0"
                               VerticalScrollBarVisibility="Visible"
                               MaxHeight="380"
+                              Name="ListViewScrollViewer"
+                              PreviewMouseWheel="ListViewScrollViewer_PreviewMouseWheel"
                               >
-                    <DataGrid ItemsSource="{Binding Items2}"
-                              CanUserAddRows="True"
+                    <DataGrid CanUserAddRows="False"
                               SelectionUnit="Cell"
                               SelectionMode="Extended"
                               x:Name="SongGrid"

@@ -23,6 +23,7 @@ namespace YourtubeV2.Downloads
             {
                 var youtube = new YoutubeClient();
                 string url = "https://www.youtube.com/watch?v=" + id.VideoId;
+                //var vis = await youtube.
                 var vid = await youtube.Videos.GetAsync(url);
 
                 var streamManifest = await youtube.Videos.Streams.GetManifestAsync(id.VideoId);
@@ -30,7 +31,7 @@ namespace YourtubeV2.Downloads
                 if (streamInfo != null)
                 {
                     await youtube.Videos.Streams.GetAsync(streamInfo);
-                    await youtube.Videos.Streams.DownloadAsync(streamInfo, $"{directory}\\{vid.Title} + .mp3");
+                    await youtube.Videos.Streams.DownloadAsync(streamInfo, $"{directory}\\{vid.Title}.mp3");
                 }
                 //string data = Directory.GetCurrentDirectory() + "\\";
 

@@ -82,7 +82,8 @@
             <StackPanel>
                 <TextBox materialDesign:HintAssist.Hint="Url"
                          Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                         Margin="10,5,10,10" />
+                         Margin="10,5,10,10" 
+                         Name="UrlTextBox"/>
                 <Grid>
                     <TextBox materialDesign:HintAssist.Hint="Directory"
                              Style="{StaticResource MaterialDesignFloatingHintTextBox}"
@@ -100,11 +101,14 @@
                             />
                 </Grid>
                 <ProgressBar Height="15"
-                             Margin="10,5,10,10" />
+                             Margin="10,5,10,10"
+                             Name="progressBarVideo"/>
                 <Button Style="{StaticResource MaterialDesignRaisedButton}"
                         Width="150"
                         ToolTip="Resource name: MaterialDesignRaisedButton"
-                        Content="Download" />
+                        Content="Download"
+                        Name="DownloadButton"
+                        Click="DownloadButton_Click"/>
             </StackPanel>
         </StackPanel>
     </materialDesign:DrawerHost>

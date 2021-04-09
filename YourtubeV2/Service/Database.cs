@@ -116,22 +116,20 @@ namespace YourtubeV2.Service
             sqlite_conn.Close();
         }
 
-        public async void AddSong(string songId, string url)
+        public void AddSong(string songId, string songName)
         {
             sqlite_conn.Open();
             SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
             UserGetSet.input();
-            var youtube = new YoutubeClient();
-            var vid = await youtube.Videos.GetAsync(url);
             sqlite_cmd.CommandText = $"INSERT INTO Songs (SongId, SongName, Downloaded, PlaylistId) Values (?,?,?,?)";
             sqlite_cmd.Parameters.AddWithValue("SongId", songId);
-            sqlite_cmd.Parameters.AddWithValue("SongName", vid.Title);
+            sqlite_cmd.Parameters.AddWithValue("SongName", songName);
             sqlite_cmd.Parameters.AddWithValue("Downloaded", "No");
             sqlite_cmd.Parameters.AddWithValue("PlaylistId", UserGetSet.SelectedPlaylistId);
             sqlite_cmd.ExecuteNonQuery();
             sqlite_conn.Close();
         }
-        public void AddSongs(List<JsonList> songList, string playlistId)
+        public void AddSongs(List<JsonList> songList, string playlistId, bool addPlaylist)
         {
             sqlite_conn.Open();
             UserGetSet.input();
@@ -144,12 +142,15 @@ namespace YourtubeV2.Service
                 sqlite_cmd.Parameters.AddWithValue("Downloaded", "No");
                 sqlite_cmd.Parameters.AddWithValue("PlaylistId", UserGetSet.SelectedPlaylistId);
                 sqlite_cmd.ExecuteNonQuery();
+            } 
+            if (addPlaylist == true)
+            {
+                SQLiteCommand sqlite_cmd2 = sqlite_conn.CreateCommand();
+                sqlite_cmd2.CommandText = $"INSERT INTO PlaylistDetails (PlaylistCode, PlaylistId) Values (?,?)";
+                sqlite_cmd2.Parameters.AddWithValue("PlaylistCode", playlistId);
+                sqlite_cmd2.Parameters.AddWithValue("PlaylistId", UserGetSet.SelectedPlaylistId);
+                sqlite_cmd2.ExecuteNonQuery();
             }
-            SQLiteCommand sqlite_cmd2 = sqlite_conn.CreateCommand();
-            sqlite_cmd2.CommandText = $"INSERT INTO PlaylistDetails (PlaylistCode, PlaylistId) Values (?,?)";
-            sqlite_cmd2.Parameters.AddWithValue("PlaylistCode", playlistId);
-            sqlite_cmd2.Parameters.AddWithValue("PlaylistId", UserGetSet.SelectedPlaylistId);
-            sqlite_cmd2.ExecuteNonQuery();
             sqlite_conn.Close();
         }
 
@@ -165,6 +166,24 @@ namespace YourtubeV2.Service
             }
             sqlite_conn.Close();
         }
+
+        public List<string> GetPlaylistId()
+        {
+            sqlite_conn.Open();
+            SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
+            sqlite_cmd.CommandText = "SELECT PlaylistCode FROM PlaylistDetails WHERE PlaylistId = ?";
+            UserGetSet.input();
+            sqlite_cmd.Parameters.AddWithValue("PlaylistId", UserGetSet.SelectedPlaylistId);
+            SQLiteDataReader sqlite_datareader = sqlite_cmd.ExecuteReader();
+            List<string> list = new List<string>();
+            while (sqlite_datareader.Read())
+            {
+                list.Add(sqlite_datareader.GetString(0));
+            }
+            sqlite_conn.Close();
+            return list;
+        }
+        
     }
 }
 //AIzaSyCBYx5nDeHanit6rpvzhZLSDy52diu7ecI
